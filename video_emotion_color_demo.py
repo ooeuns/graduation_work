@@ -72,12 +72,16 @@ while True: # 특정 키를 누를 때까지 무한 사용
         gray_face = gray_image[y1:y2, x1:x2]
         try:
             gray_face = cv2.resize(gray_face, (emotion_target_size))
+            # cv2.resize 이미지의 사이즈가 변함.
+            # 첫번째 파라미터에서 img선택, 두번째 파라미터에서 사이즈
         except:
             continue
 
         gray_face = preprocess_input(gray_face, True)
         gray_face = np.expand_dims(gray_face, 0)
         gray_face = np.expand_dims(gray_face, -1)
+        # numpy.expand_dims(a, axis) 배열의 모양을 확장하고 확장된 배열 모양 축 위치에 새 축을 삽입
+        # https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.expand_dims.html
         emotion_prediction = emotion_classifier.predict(gray_face)
         emotion_probability = np.max(emotion_prediction)
         emotion_label_arg = np.argmax(emotion_prediction)
@@ -85,7 +89,9 @@ while True: # 특정 키를 누를 때까지 무한 사용
         emotion_window.append(emotion_text)
 
         if len(emotion_window) > frame_window:
+            # 지정된 문자열의 길이를 바이트 수대로 반환 > 앞서나온 frame_window
             emotion_window.pop(0)
+            # emotion_window를 뺌
         try:
             emotion_mode = mode(emotion_window)
         except:
@@ -93,6 +99,8 @@ while True: # 특정 키를 누를 때까지 무한 사용
 
         if emotion_text == 'angry':
             color = emotion_probability * np.asarray((255, 0, 0))
+            # np.asarray 입력을 배열로 변환함
+            # 첫번째 파라미터는 배열로 변환할 수 있는 모든 형식의 데이터를 저장.(튜플, 리스트 포함)
         elif emotion_text == 'sad':
             color = emotion_probability * np.asarray((0, 0, 255))
         elif emotion_text == 'happy':
@@ -103,7 +111,9 @@ while True: # 특정 키를 누를 때까지 무한 사용
             color = emotion_probability * np.asarray((0, 255, 0))
 
         color = color.astype(int)
+        # 지정된 변수로 배열이 캐스트 됨
         color = color.tolist()
+        # 배열안에 있는 리스트들을 중첩시킴.
 
         draw_bounding_box(face_coordinates, rgb_image, color)
         draw_text(face_coordinates, rgb_image, emotion_mode,
@@ -113,3 +123,4 @@ while True: # 특정 키를 누를 때까지 무한 사용
     cv2.imshow('window_frame', bgr_image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    # waitKey 1초동안 기다림. 즉 특정 입력이 있으면 종료한다는 뜻.
