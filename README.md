@@ -3,3 +3,5 @@
 <p>Then they analyze it and turn on the mood light that matches it.</p>
 <br />
 <p>be still developing...<p>
+  
+  <p>it is connect to RGB LIGHT
