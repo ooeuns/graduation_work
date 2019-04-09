@@ -14,6 +14,8 @@ from models.cnn import mini_XCEPTION
 from utils.datasets import DataManager
 from utils.datasets import split_data
 from utils.preprocessor import preprocess_input
+import os
+
 
 # parameters
 batch_size = 32
